@@ -79,7 +79,7 @@ document.addEventListener('DOMContentLoaded', () => {
     async function fetchKiDescription(profile, name, sym) {
         resultTextP.textContent = "KI-Beschreibung wird geladen...";
         try {
-            const response = await fetch('https://woe-me-maybe.vercel.app/api/generate', {
+            const response = await fetch('https://woe-me-maybe-525717567522.europe-west1.run.app', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json', },
                 body: JSON.stringify({ economic: profile.economic, social: profile.social, partyName: name, symbol: sym }),
@@ -101,7 +101,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function updateShareLinks(partyName) {
         // HIER WURDE DIE URL GEÄNDERT
-        const quizUrl = "https://woe-me-maybe.vercel.app/"; // Deine neue Vercel Frontend-URL
+        const quizUrl = "https://woe-me-maybe-525717567522.europe-west1.run.app"; // Deine neue Vercel Frontend-URL
         const shareTextBase = `Ich habe im KI-Parteien-Quiz die "${partyName}" erstellt! Finde deine Partei: `;
         const shareTextWithUrl = shareTextBase + quizUrl;
         const encodedUrl = encodeURIComponent(quizUrl);
