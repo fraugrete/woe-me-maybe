@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KI-Parteien-Quiz - Prototyp</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+
+</head>
+<body>
+
+    <div id="quiz-container"> <div id="page-start" class="page">
+            <h1>Willkommen zum KI-Parteien-Quiz!</h1>
+            <p>Beantworte 10 Fragen und erschaffe deine eigene politische Partei. Gib ihr einen Namen, eine Farbe, ein Symbol und lass die KI (simuliert) ein Logo, eine Beschreibung und eine Vision für Österreich generieren.</p>
+            <button id="start-button">Quiz starten!</button>
+        </div>
+
+        <div id="page-questions" class="page">
+            <h2>Frage <span id="question-number">1</span> von 10</h2>
+            <p id="question-text">Hier steht die erste Frage...</p>
+            <div id="answer-buttons">
+                <button data-value="2">Stimme voll zu</button>
+                <button data-value="1">Stimme eher zu</button>
+                <button data-value="0">Neutral</button>
+                <button data-value="-1">Stimme eher nicht zu</button>
+                <button data-value="-2">Stimme gar nicht zu</button>
+            </div>
+        </div>
+
+        <div id="page-config" class="page">
+            <h2>Gestalte deine Partei!</h2>
+            <p>Gib deiner neuen Partei eine Identität.</p>
+            <div>
+                <label for="party-name">Parteiname:</label>
+                <input type="text" id="party-name" placeholder="Gib hier deinen Wunschnamen ein">
+            </div>
+            <div>
+                <p>Oder wähle einen Vorschlag:</p>
+                <button class="name-suggestion">Partei der Zukunft</button>
+                <button class="name-suggestion">Bewegung für Gerechtigkeit</button>
+                <button class="name-suggestion">Österreichs Innovativ-Liberale</button>
+            </div>
+            <div id="color-selection">
+                <p>Parteifarbe:</p>
+                <button class="color-btn" style="background-color: #E63946;" data-color="#E63946">&nbsp;</button>
+                <button class="color-btn" style="background-color: #457B9D;" data-color="#457B9D">&nbsp;</button>
+                <button class="color-btn" style="background-color: #A8DADC;" data-color="#A8DADC">&nbsp;</button>
+                <button class="color-btn" style="background-color: #F4A261;" data-color="#F4A261">&nbsp;</button>
+                <button class="color-btn" style="background-color: #2A9D8F;" data-color="#2A9D8F">&nbsp;</button>
+                <button class="color-btn" style="background-color: #585123;" data-color="#585123">&nbsp;</button>
+            </div>
+            <div id="symbol-selection">
+                <p>Symbol/Wappentier:</p>
+                <button class="symbol-btn" data-symbol="🌳">🌳</button>
+                <button class="symbol-btn" data-symbol="⚙️">⚙️</button>
+                <button class="symbol-btn" data-symbol="⚖️">⚖️</button>
+                <button class="symbol-btn" data-symbol="🦅">🦅</button>
+                <button class="symbol-btn" data-symbol="🐝">🐝</button>
+                <button class="symbol-btn" data-symbol="💡">💡</button>
+            </div>
+            <button id="create-party-button">Partei erschaffen!</button>
+        </div>
+
+        <div id="page-results" class="page">
+            <h2>Hier ist deine Partei: <span id="result-party-name"></span>!</h2>
+            <div id="result-symbol" style="font-size: 80px; margin: 20px auto; width: 130px; height: 130px; line-height: 130px; border: 5px solid #ccc; border-radius: 15px; background-color: #fff;"></div>
+            <p id="result-text" style="min-height: 60px;">Platzhalter Text: Die KI beschreibt hier deine Partei...</p>
+            <img id="result-image" src="https://placehold.co/300x200/CCCCCC/000000?text=Deine+Vision..." alt="Platzhalter Vision-Bild" style="width: 300px; height: 200px; background-color: #eee; margin: 20px auto; display: block; border: 1px solid #aaa;">
+
+            <div id="share-buttons" style="margin-top: 30px; border-top: 1px solid #ccc; padding-top: 15px;">
+                <p>Teile deine Partei:</p>
+                <a id="share-fb" href="#" target="_blank" class="share-btn" style="background-color: #3b5998;">Facebook</a>
+                <a id="share-rd" href="#" target="_blank" class="share-btn" style="background-color: #ff4500;">Reddit</a>
+                <a id="share-bs" href="#" target="_blank" class="share-btn" style="background-color: #007bff;">Bluesky</a>
+                <a id="share-th" href="#" target="_blank" class="share-btn" style="background-color: #000000;">Threads</a>
+                <a id="share-wa" href="#" target="_blank" class="share-btn" style="background-color: #25D366;">WhatsApp</a>
+                <button id="copy-link" class="share-btn" style="background-color: #555;">Link kopieren</button>
+                <span id="copy-feedback" style="margin-left: 10px; font-size: 12px; color: green; display: none;">Kopiert!</span>
+            </div>
+
+            <button id="restart-button">Neu starten</button>
+        </div>
+
+    </div> <script src="Partei-o-mat.js"></script>
+</body>
+</html>

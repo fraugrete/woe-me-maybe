@@ -1,0 +1,11 @@
+# Node.js
+/node_modules
+.env
+
+# Systemdateien
+.DS_Store
+
+# Dokumente
+*.docx
+*.pdf
+*.log

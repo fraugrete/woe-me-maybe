@@ -1,0 +1,150 @@
+/* Grundlegende Stile & Farben */
+:root {
+    --bg-color: #D85C3A; /* Rot-Orange */
+    --text-color: #F5E5C4; /* Creme */
+    --accent-color: #F2B705; /* Goldgelb */
+    --dark-color: #333333; /* Dunkelgrau statt Schwarz */
+    --light-bg: #fdf6e9; /* Helles Creme für Content */
+}
+
+body {
+    font-family: 'Fredoka', sans-serif; /* Neue Schriftart */
+    margin: 0;
+    padding: 0;
+    background-color: var(--bg-color);
+    color: var(--dark-color);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh; /* Mindestens volle Höhe */
+    padding: 20px; /* Etwas Abstand zum Rand */
+    box-sizing: border-box; /* Padding einrechnen */
+}
+
+/* Haupt-Container für das Quiz */
+#quiz-container {
+    background-color: var(--light-bg);
+    padding: 30px 40px;
+    border-radius: 20px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    width: 100%;
+    max-width: 700px; /* Maximale Breite */
+    text-align: center;
+}
+
+/* Seiten-Styling (jetzt nur noch für Anzeige zuständig) */
+.page {
+    display: none;
+    padding: 10px 0; /* Weniger Padding, da #quiz-container schon hat */
+}
+
+#page-start {
+    display: block;
+}
+
+/* Überschriften */
+h1, h2 {
+    color: var(--bg-color); /* Rot-Orange für H1/H2 */
+    font-weight: 700; /* Fett */
+}
+
+/* Paragraphen */
+p {
+    color: var(--dark-color);
+    max-width: 600px;
+    margin: 20px auto;
+    line-height: 1.6;
+}
+
+/* Button-Styling */
+button, .share-btn {
+    font-family: 'Fredoka', sans-serif; /* Schriftart übernehmen */
+    background-color: var(--accent-color); /* Goldgelb */
+    color: var(--dark-color); /* Dunkler Text */
+    border: none;
+    border-radius: 30px; /* Rundere Ecken */
+    padding: 12px 25px;
+    font-size: 18px;
+    cursor: pointer;
+    margin: 8px; /* Einheitlicher Abstand */
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    text-decoration: none; /* Für <a>-Tags */
+    display: inline-block; /* Für <a>-Tags */
+    font-weight: 700;
+}
+
+button:hover, .share-btn:hover {
+    transform: translateY(-2px); /* Leichter Schwebe-Effekt */
+    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
+}
+
+/* Spezieller Start-Button */
+#start-button {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    padding: 15px 40px;
+    font-size: 20px;
+}
+
+/* Antwort-Buttons */
+#answer-buttons button {
+    background-color: #fff;
+    border: 2px solid var(--accent-color);
+    color: var(--dark-color);
+}
+#answer-buttons button:hover {
+     background-color: var(--accent-color);
+     color: #fff;
+}
+
+/* Konfig-Buttons (Farbe/Symbol) */
+.color-btn, .symbol-btn {
+    padding: 10px 15px;
+    font-size: 20px;
+    border: 3px solid transparent;
+    transition: border-color 0.2s, transform 0.2s;
+    width: 50px; /* Einheitliche Größe */
+    height: 50px;
+    line-height: 1; /* Für Emojis zentrieren */
+    background-color: #fff; /* Basis-Farbe */
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+.color-btn { border-radius: 50%; }
+.symbol-btn { border-radius: 10px; }
+
+.color-btn.selected, .symbol-btn.selected {
+    border-color: var(--bg-color); /* Rot-Orange für Auswahl */
+    transform: scale(1.1);
+}
+
+/* Input-Feld */
+#party-name {
+    padding: 10px;
+    font-size: 16px;
+    margin-bottom: 15px;
+    border: 2px solid #ccc;
+    border-radius: 10px;
+    width: 80%;
+    max-width: 400px;
+    text-align: center;
+}
+
+/* Ergebnis-Seite */
+#result-symbol {
+    background-color: #fff !important; /* Sicherstellen, dass es weiß ist */
+    line-height: 130px !important; /* Vertikale Zentrierung */
+}
+
+/* Share-Buttons (spezifische Farben beibehalten, aber Basis-Stil nutzen) */
+.share-btn {
+    color: white !important; /* Weißer Text auf farbigen Buttons */
+    font-size: 14px;
+    padding: 8px 15px;
+}
+#share-fb { background-color: #3b5998; }
+#share-rd { background-color: #ff4500; }
+#share-bs { background-color: #007bff; }
+#share-th { background-color: #000000; }
+#share-wa { background-color: #25D366; }
+#copy-link { background-color: #555; }
