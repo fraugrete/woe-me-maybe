@@ -79,7 +79,7 @@ document.addEventListener('DOMContentLoaded', () => {
     async function fetchKiDescription(profile, name, sym) {
         resultTextP.textContent = "KI-Beschreibung wird geladen...";
         try {
-            const response = await fetch('https://woe-me-maybe-525717567522.europe-west1.run.app', {
+            const response = await fetch('https://woe-me-maybe-525717567522.europe-west1.run.app/generate-description', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json', },
                 body: JSON.stringify({ economic: profile.economic, social: profile.social, partyName: name, symbol: sym }),
