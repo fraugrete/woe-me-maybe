@@ -1,47 +1,41 @@
 import { GoogleGenerativeAI } from '@google/generative-ai';
+import express from 'express';
+import cors from 'cors';
 
-// Diese Funktion wird von Vercel aufgerufen
-export default async function handler(req, res) {
-  
-  // --- CORS Header setzen ---
-  // Erlaubt Anfragen von JEDER Domain (für den Test). In Produktion solltest du das auf deine Frontend-Domain einschränken.
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+// --- Konfiguration ---
+const app = express();
+const port = process.env.PORT || 8080; // Google Cloud Run gibt den Port über eine Umgebungsvariable vor
 
-  // --- Preflight Request (OPTIONS) beantworten ---
-  if (req.method === 'OPTIONS') {
-    res.status(204).send('');
-    return;
-  }
+// --- Middleware ---
+app.use(cors()); // CORS für alle Anfragen erlauben
+app.use(express.json()); // JSON-Body-Parser
 
-  // --- Nur POST-Anfragen erlauben ---
-  if (req.method !== 'POST') {
-    res.status(405).json({ error: 'Nur POST-Anfragen sind erlaubt.' });
-    return;
-  }
-
-  // --- API Key & Modell Initialisierung ---
+// --- KI-Modell Initialisierung ---
+let model;
+try {
   const apiKey = process.env.GEMINI_API_KEY;
-  if (!apiKey || apiKey.trim() === "") {
-    console.error("FEHLER: GEMINI_API_KEY ist nicht gesetzt.");
-    res.status(500).json({ error: 'API Key für KI-Modell nicht konfiguriert.' });
-    return;
+  if (!apiKey) {
+    throw new Error("GEMINI_API_KEY ist nicht als Umgebungsvariable gesetzt.");
   }
-  
-  try {
-    const genAI = new GoogleGenerativeAI(apiKey);
-    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+  const genAI = new GoogleGenerativeAI(apiKey);
+  model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+} catch (error) {
+  console.error("KRITISCHER FEHLER: KI-Modell konnte nicht initialisiert werden.", error);
+}
 
-    // --- Daten aus der Anfrage holen ---
+// --- API Endpunkt / Route ---
+app.post('/generate-description', async (req, res) => {
+  if (!model) {
+    return res.status(500).json({ error: "KI-Modell nicht korrekt initialisiert." });
+  }
+
+  try {
     const { economic, social, partyName, symbol } = req.body;
 
     if (economic === undefined || social === undefined || !partyName || !symbol) {
-      res.status(400).json({ error: 'Fehlende Daten in der Anfrage (economic, social, partyName, symbol benötigt).' });
-      return;
+      return res.status(400).json({ error: 'Fehlende Daten in der Anfrage.' });
     }
 
-    // --- Prompt bauen ---
     const prompt = `
 Rolle: Du bist ein schlagkräftiger Wahlkampf-Stratege in Österreich. Deine Aufgabe ist es, die Essenz einer neuen Partei in wenigen, prägnanten Sätzen mit konkreten Beispielen darzustellen.
 Kontext: Eine neue fiktive Partei namens "${partyName}" (Symbol: ${symbol}) wurde erstellt. Ihr politisches Profil ist:
@@ -60,15 +54,19 @@ ABSOLUTE TABUS (STRENG BEACHTEN!):
 Liefere nur den reinen Beschreibungstext. Beginne direkt mit dem ersten Satz.
     `;
 
-    // --- KI aufrufen und Antwort senden ---
     const result = await model.generateContent(prompt);
     const response = await result.response;
     const text = response.text();
-    
-    res.status(200).json({ description: text });
+
+    return res.status(200).json({ description: text });
 
   } catch (error) {
-    console.error("FEHLER bei der KI-Anfrage:", error);
-    res.status(500).json({ error: `Interner Fehler bei der Textgenerierung: ${error.message}` });
+    console.error("Fehler bei der KI-Anfrage:", error);
+    return res.status(500).json({ error: "Interner Fehler bei der Textgenerierung." });
   }
-}
+});
+
+// --- Server Start ---
+app.listen(port, () => {
+  console.log(`Server läuft und lauscht auf Port ${port}`);
+});
