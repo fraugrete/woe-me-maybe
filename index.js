@@ -2,43 +2,37 @@ import { GoogleGenerativeAI } from '@google/generative-ai';
 import express from 'express';
 import cors from 'cors';
 
-// --- Konfiguration ---
 const app = express();
 const port = process.env.PORT || 8080;
 
-// --- Middleware ---
 app.use(cors());
 app.use(express.json());
 
-// +++ UNSER NEUER SPION: Loggt jede eingehende Anfrage +++
 app.use((req, res, next) => {
     console.log(`EINGEHENDER REQUEST: Methode=${req.method}, URL=${req.originalUrl}`);
-    next(); // Wichtig, damit die Anfrage weiterverarbeitet wird
+    next();
 });
-// +++ ENDE SPION +++
 
-
-// --- KI-Modell Initialisierung ---
 let model;
 try {
   const apiKey = process.env.GEMINI_API_KEY;
-  if (!apiKey) {
-    throw new Error("GEMINI_API_KEY ist nicht als Umgebungsvariable gesetzt.");
-  }
+  if (!apiKey) throw new Error("GEMINI_API_KEY ist nicht als Umgebungsvariable gesetzt.");
   const genAI = new GoogleGenerativeAI(apiKey);
   model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 } catch (error) {
   console.error("KRITISCHER FEHLER: KI-Modell konnte nicht initialisiert werden.", error);
 }
 
-// --- API Endpunkt / Route ---
-app.post('/generate-description', async (req, res) => {
+// Wir verwenden app.all(), um auf GET und POST zu reagieren
+app.all('/generate-description', async (req, res) => {
   if (!model) {
     return res.status(500).json({ error: "KI-Modell nicht korrekt initialisiert. API-Key prüfen." });
   }
 
   try {
-    const { economic, social, partyName, symbol } = req.body;
+    // Daten holen, egal ob von GET (query) oder POST (body)
+    const data = req.method === 'GET' ? req.query : req.body;
+    const { economic, social, partyName, symbol } = data;
 
     if (economic === undefined || social === undefined || !partyName || !symbol) {
       return res.status(400).json({ error: 'Fehlende Daten in der Anfrage.' });
@@ -74,7 +68,6 @@ Liefere nur den reinen Beschreibungstext. Beginne direkt mit dem ersten Satz.
   }
 });
 
-// --- Server Start ---
 app.listen(port, () => {
   console.log(`Server läuft und lauscht auf Port ${port}`);
 });

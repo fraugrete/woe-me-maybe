@@ -76,27 +76,39 @@ document.addEventListener('DOMContentLoaded', () => {
         console.log("Frontend - Politisches Profil:", politicalProfile);
     }
 
-    async function fetchKiDescription(profile, name, sym) {
-        resultTextP.textContent = "KI-Beschreibung wird geladen...";
-        try {
-           const response = await fetch('https://woe-me-maybe-525717567522.europe-west1.run.app/generate-description', {
-    
-            });
-              
-            if (!response.ok) {
-                const errorData = await response.json().catch(() => ({ error: `Server antwortete mit Status ${response.status}` }));
-                throw new Error(`Backend-Fehler (${response.status}): ${errorData.error || response.statusText}`);
-            }
-            const data = await response.json();
-            return data.description || "Keine Beschreibung von der KI erhalten.";
-        } catch (error) {
-            console.error("Fehler beim Abrufen der KI-Beschreibung:", error);
-            if (error instanceof TypeError && error.message.includes('Failed to fetch')) {
-                return "Fehler: Netzwerkproblem oder Backend nicht erreichbar unter der angegebenen URL. Läuft die Funktion und ist die URL korrekt?";
-            }
-            return `Fehler: ${error.message}`;
+   async function fetchKiDescription(profile, name, sym) {
+    resultTextP.textContent = "KI-Beschreibung wird geladen...";
+    try {
+        // Wir bauen die URL mit Query-Parametern
+        const queryParams = new URLSearchParams({
+            economic: profile.economic,
+            social: profile.social,
+            partyName: name,
+            symbol: sym
+        });
+        
+        const backendUrl = `https://woe-me-maybe-525717567522.europe-west1.run.app/generate-description?${queryParams.toString()}`;
+
+        const response = await fetch(backendUrl, {
+            method: 'POST', // Wir versuchen weiterhin POST, aber das Backend akzeptiert jetzt auch GET
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ economic: profile.economic, social: profile.social, partyName: name, symbol: sym }),
+        });
+
+        if (!response.ok) {
+            const errorData = await response.json().catch(() => ({ error: `Server antwortete mit Status ${response.status}` }));
+            throw new Error(`Backend-Fehler (${response.status}): ${errorData.error || response.statusText}`);
         }
+        const data = await response.json();
+        return data.description || "Keine Beschreibung von der KI erhalten.";
+    } catch (error) {
+        console.error("Fehler beim Abrufen der KI-Beschreibung:", error);
+        if (error instanceof TypeError && error.message.includes('Failed to fetch')) {
+            return "Fehler: Netzwerkproblem oder Backend nicht erreichbar.";
+        }
+        return `Fehler: ${error.message}`;
     }
+}
 
     function updateShareLinks(partyName) {
         // HIER WURDE DIE URL GEÄNDERT
