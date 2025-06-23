@@ -4,11 +4,19 @@ import cors from 'cors';
 
 // --- Konfiguration ---
 const app = express();
-const port = process.env.PORT || 8080; // Google Cloud Run gibt den Port über eine Umgebungsvariable vor
+const port = process.env.PORT || 8080;
 
 // --- Middleware ---
-app.use(cors()); // CORS für alle Anfragen erlauben
-app.use(express.json()); // JSON-Body-Parser
+app.use(cors());
+app.use(express.json());
+
+// +++ UNSER NEUER SPION: Loggt jede eingehende Anfrage +++
+app.use((req, res, next) => {
+    console.log(`EINGEHENDER REQUEST: Methode=${req.method}, URL=${req.originalUrl}`);
+    next(); // Wichtig, damit die Anfrage weiterverarbeitet wird
+});
+// +++ ENDE SPION +++
+
 
 // --- KI-Modell Initialisierung ---
 let model;
@@ -26,7 +34,7 @@ try {
 // --- API Endpunkt / Route ---
 app.post('/generate-description', async (req, res) => {
   if (!model) {
-    return res.status(500).json({ error: "KI-Modell nicht korrekt initialisiert." });
+    return res.status(500).json({ error: "KI-Modell nicht korrekt initialisiert. API-Key prüfen." });
   }
 
   try {
